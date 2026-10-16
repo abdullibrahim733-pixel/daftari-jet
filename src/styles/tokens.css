@@ -1,85 +1,90 @@
 /*
- * Single token source for the Daftari Dashboard (PRD section 9).
+ * Single token source for the Daftari Dashboard (Apple Design System).
  *
- * Brand values below are fixed by the product specification and must not be
- * re-invented per screen:
- *   Deep Navy      #0D1B2A
- *   Saffron Orange #FF8A00
- *   Warm Ivory     #FFF7E6
- *   Success Green  #23845B
- *
- * Supporting neutrals are derived named tokens. Contrast pairs used by the UI
- * are asserted in tests/unit/brand-contrast.test.ts.
+ * Core principles: Clarity, Deference, Depth.
+ *   - Pitch-black matte background #0B0B0F for depth
+ *   - Stark White #FFFFFF for text and core geometric structures
+ *   - Vibrant Crimson Red #FF1133 used with absolute constraint — only for
+ *     high-priority interactive accents, single active tab markers, or terminal
+ *     focal points. Never flood the screen with red.
+ *   - San Francisco (SF Pro) primary, Inter/Roboto Mono fallback for data
+ *   - Bento grid cards with soft subtle borders (1px #222) or faint gradients
+ *     (#16161D) floating off the pitch-black background
+ *   - Fluid spring-physics micro-interactions, backdrop-filter blur(20px)
  */
 
 @theme {
-  /* Brand */
-  --color-navy: #0d1b2a;
-  --color-saffron: #ff8a00;
-  --color-ivory: #fff7e6;
-  --color-success: #23845b;
+  /* Brand — Apple Design System */
+  --color-black-matte: #0b0b0f;
+  --color-white: #ffffff;
+  --color-crimson: #ff1133;
+  --color-crimson-hover: #e60e2d;
 
-  /* Surfaces */
-  --color-surface: #ffffff;
-  --color-surface-raised: #ffffff;
-  --color-surface-subtle: #fdf8ee;
-  --color-surface-sunken: #f7efdf;
-  --color-surface-disabled: #f1eade;
-  --color-surface-inverse: #0d1b2a;
-  --color-surface-inverse-soft: #1c2f42;
+  /* Surfaces — layered depth on pitch-black */
+  --color-surface: #0b0b0f;
+  --color-surface-raised: #121217;
+  --color-surface-subtle: #16161d;
+  --color-surface-sunken: #0f0f14;
+  --color-surface-disabled: #1a1a20;
+  --color-surface-inverse: #ffffff;
+  --color-surface-inverse-soft: #f2f2f7;
 
-  /* Borders */
-  --color-border-subtle: #e6dcc8;
-  --color-border-strong: #cdbfa4;
-  --color-border-inverse: #33465a;
+  /* Borders — soft, subtle */
+  --color-border-subtle: #222222;
+  --color-border-strong: #3a3a3a;
+  --color-border-inverse: #ffffff;
+  --color-border-crimson: #ff1133;
 
-  /* Text */
-  --color-text: #0d1b2a;
-  --color-text-muted: #55606e;
-  --color-text-subtle: #6b7583;
-  --color-text-inverse: #fff7e6;
-  --color-text-inverse-muted: #c3ccd6;
-  --color-text-link: #0a5c8a;
+  /* Text — stark white for clarity */
+  --color-text: #ffffff;
+  --color-text-muted: #8e8e93;
+  --color-text-subtle: #636366;
+  --color-text-inverse: #0b0b0f;
+  --color-text-inverse-muted: #aeb7c2;
+  --color-text-link: #ffffff;
 
-  /* Semantic state */
-  --color-state-success: #23845b;
-  --color-state-success-surface: #e6f2ec;
-  --color-state-warning: #8a5200;
-  --color-state-warning-surface: #fdefd6;
-  --color-state-danger: #b3261e;
-  --color-state-danger-surface: #fbe9e7;
-  --color-state-info: #0a5c8a;
-  --color-state-info-surface: #e6f0f7;
-  --color-state-neutral-surface: #f1eade;
+  /* Semantic state — crimson for danger only */
+  --color-state-success: #30d158;
+  --color-state-success-surface: #1c3a24;
+  --color-state-warning: #ffcc00;
+  --color-state-warning-surface: #2a2400;
+  --color-state-danger: #ff1133;
+  --color-state-danger-surface: #2a0a12;
+  --color-state-info: #0a84ff;
+  --color-state-info-surface: #0a1a33;
+  --color-state-neutral-surface: #1a1a20;
 
-  /* Accents used on interactive controls */
-  --color-action-primary: #ff8a00;
-  --color-action-primary-hover: #e87d00;
-  --color-action-primary-text: #0d1b2a;
-  --color-focus-ring: #0d1b2a;
+  /* Accents — crimson with absolute constraint */
+  --color-action-primary: #ff1133;
+  --color-action-primary-hover: #e60e2d;
+  --color-action-primary-text: #ffffff;
+  --color-focus-ring: #ff1133;
 
   /* Charts */
-  --color-chart-sales: #23845b;
-  --color-chart-expenses: #b26a00;
-  --color-chart-grid: #e6dcc8;
-  --color-chart-axis: #55606e;
+  --color-chart-sales: #30d158;
+  --color-chart-expenses: #ff1133;
+  --color-chart-grid: #222222;
+  --color-chart-axis: #636366;
 
-  /* Radii */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  /* Radii — Apple-style rounded rectangles */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
   --radius-pill: 999px;
 
-  /* Shadows: restrained, warm */
-  --shadow-card: 0 1px 2px rgb(13 27 42 / 0.06), 0 1px 1px rgb(13 27 42 / 0.04);
-  --shadow-raised: 0 4px 12px rgb(13 27 42 / 0.1);
-  --shadow-overlay: 0 12px 32px rgb(13 27 42 / 0.18);
+  /* Shadows — depth through blur and subtle elevation */
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.4), 0 1px 2px rgb(0 0 0 / 0.2);
+  --shadow-raised: 0 10px 30px rgb(0 0 0 / 0.4);
+  --shadow-overlay: 0 20px 60px rgb(0 0 0 / 0.6);
 
-  /* Typography */
+  /* Typography — San Francisco / SF Pro */
   --font-sans:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
-    sans-serif;
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --font-display:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 
   /* Z-index scale */
@@ -92,6 +97,9 @@
   /* Spacing base: 4px, giving the 4/8/12/16/24/32/48 scale */
   --spacing: 4px;
 
-  /* Motion */
-  --default-transition-duration: 120ms;
+  /* Motion — spring physics, fluid micro-interactions */
+  --default-transition-duration: 300ms;
+  --spring-duration: 450ms;
+  --spring-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --click-scale: 0.98;
 }

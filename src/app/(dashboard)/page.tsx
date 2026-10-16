@@ -189,7 +189,7 @@ function StatCard({
   label: string;
   value: string;
   detail: string;
-  tone: 'orange' | 'green' | 'blue' | 'navy';
+  tone: 'crimson' | 'green' | 'blue' | 'orange';
   icon: string;
 }) {
   return (
@@ -449,7 +449,7 @@ export default function DashboardHome() {
               label={t('overview.kpi.outstandingDeni')}
               value={summary?.deni ? money(summary.deni.outstandingMinor, currency) : '—'}
               detail={t(summary?.deni ? 'overview.kpi.deniCalc' : 'overview.kpi.deniUnavailable')}
-              tone="navy"
+              tone="crimson"
               icon="◎"
             />
           </section>

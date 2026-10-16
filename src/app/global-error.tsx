@@ -24,9 +24,9 @@ export default function GlobalError({
           minHeight: '100vh',
           display: 'grid',
           placeItems: 'center',
-          background: '#0D1B2A',
-          color: '#FFF7E6',
-          fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+          background: '#0B0B0F',
+          color: '#FFFFFF',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, -apple-system, sans-serif',
         }}
       >
         <main style={{ maxWidth: 460, padding: 32, textAlign: 'center' }}>
@@ -48,8 +48,8 @@ export default function GlobalError({
               appearance: 'none',
               border: 0,
               cursor: 'pointer',
-              background: '#FF8A00',
-              color: '#0D1B2A',
+              background: '#FF1133',
+              color: '#FFFFFF',
               fontSize: 15,
               fontWeight: 600,
               padding: '12px 24px',
