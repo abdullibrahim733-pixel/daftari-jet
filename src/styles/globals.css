@@ -73,6 +73,28 @@
     font-feature-settings: 'tnum' 1;
   }
 
+  /* Text color utilities. */
+  .text-muted {
+    color: var(--color-text-muted);
+  }
+
+  .text-primary {
+    color: var(--color-crimson);
+  }
+
+  .text-red-600 {
+    color: var(--color-state-danger);
+  }
+
+  /* Border and background utilities. */
+  .border-border {
+    border-color: var(--color-border-subtle);
+  }
+
+  .bg-surface {
+    background-color: var(--color-surface-raised);
+  }
+
   .skip-link {
     position: absolute;
     left: -9999px;

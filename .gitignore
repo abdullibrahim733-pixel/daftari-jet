@@ -17,3 +17,5 @@ npm-debug.log*
 *.log
 test-output.log
 .playwright/
+.vercel
+.env*
