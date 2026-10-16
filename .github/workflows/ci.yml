@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+# A new push supersedes the previous run; stale branches burning minutes is not
+# useful feedback.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Typecheck · Lint · Test · Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          # Must match `engines.node` in package.json.
+          node-version: '24'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Runs `tsc --noEmit`, `eslint .` and the full node:test suite.
+      - name: Verify (typecheck, lint, test)
+        run: npm run verify
+
+      # The suite needs a database. Local SQLite is the default, so CI needs no
+      # secrets and no service container.
+      - name: Confirm tests actually ran
+        run: npm run test 2>&1 | tee test-output.log | grep -E '^# (pass|fail)' || true
+
+      - name: Fail if any test failed
+        run: |
+          if grep -qE '^not ok ' test-output.log; then
+            echo '::error::One or more tests failed'
+            exit 1
+          fi
+
+      - name: Build
+        run: npm run build
+        env:
+          # A production build must not be able to switch on developer sign-in.
+          NODE_ENV: 'production'
+          DAFTARI_ALLOW_DEV_LOGIN: '1'
+
+  dependency-audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm audit --audit-level=high

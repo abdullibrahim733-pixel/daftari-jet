@@ -1,0 +1,97 @@
+/*
+ * Single token source for the Daftari Dashboard (PRD section 9).
+ *
+ * Brand values below are fixed by the product specification and must not be
+ * re-invented per screen:
+ *   Deep Navy      #0D1B2A
+ *   Saffron Orange #FF8A00
+ *   Warm Ivory     #FFF7E6
+ *   Success Green  #23845B
+ *
+ * Supporting neutrals are derived named tokens. Contrast pairs used by the UI
+ * are asserted in tests/unit/brand-contrast.test.ts.
+ */
+
+@theme {
+  /* Brand */
+  --color-navy: #0d1b2a;
+  --color-saffron: #ff8a00;
+  --color-ivory: #fff7e6;
+  --color-success: #23845b;
+
+  /* Surfaces */
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-subtle: #fdf8ee;
+  --color-surface-sunken: #f7efdf;
+  --color-surface-disabled: #f1eade;
+  --color-surface-inverse: #0d1b2a;
+  --color-surface-inverse-soft: #1c2f42;
+
+  /* Borders */
+  --color-border-subtle: #e6dcc8;
+  --color-border-strong: #cdbfa4;
+  --color-border-inverse: #33465a;
+
+  /* Text */
+  --color-text: #0d1b2a;
+  --color-text-muted: #55606e;
+  --color-text-subtle: #6b7583;
+  --color-text-inverse: #fff7e6;
+  --color-text-inverse-muted: #c3ccd6;
+  --color-text-link: #0a5c8a;
+
+  /* Semantic state */
+  --color-state-success: #23845b;
+  --color-state-success-surface: #e6f2ec;
+  --color-state-warning: #8a5200;
+  --color-state-warning-surface: #fdefd6;
+  --color-state-danger: #b3261e;
+  --color-state-danger-surface: #fbe9e7;
+  --color-state-info: #0a5c8a;
+  --color-state-info-surface: #e6f0f7;
+  --color-state-neutral-surface: #f1eade;
+
+  /* Accents used on interactive controls */
+  --color-action-primary: #ff8a00;
+  --color-action-primary-hover: #e87d00;
+  --color-action-primary-text: #0d1b2a;
+  --color-focus-ring: #0d1b2a;
+
+  /* Charts */
+  --color-chart-sales: #23845b;
+  --color-chart-expenses: #b26a00;
+  --color-chart-grid: #e6dcc8;
+  --color-chart-axis: #55606e;
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* Shadows: restrained, warm */
+  --shadow-card: 0 1px 2px rgb(13 27 42 / 0.06), 0 1px 1px rgb(13 27 42 / 0.04);
+  --shadow-raised: 0 4px 12px rgb(13 27 42 / 0.1);
+  --shadow-overlay: 0 12px 32px rgb(13 27 42 / 0.18);
+
+  /* Typography */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Z-index scale */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-drawer: 20;
+  --z-overlay: 30;
+  --z-toast: 40;
+
+  /* Spacing base: 4px, giving the 4/8/12/16/24/32/48 scale */
+  --spacing: 4px;
+
+  /* Motion */
+  --default-transition-duration: 120ms;
+}
