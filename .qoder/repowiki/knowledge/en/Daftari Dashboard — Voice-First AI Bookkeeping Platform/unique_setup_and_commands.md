@@ -1,0 +1,1 @@
+npm scripts are the unified entry point: `dev`/`build`/`start` for Next.js, `db:migrate`/`db:seed`/`db:reset` for schema and dev tenant setup, `jobs:run` for the durable queue, and `verify` runs typecheck → lint → test in sequence. All Node entry points use `--import ./scripts/register-alias.mjs` to enable TS path aliases without a bundler.

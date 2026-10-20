@@ -48,6 +48,33 @@ export function isSupportedCaptureMediaType(value: string): boolean {
   return ALLOWED_MEDIA_TYPES.includes(normalizeMediaType(value));
 }
 
+/** Checks the container signature instead of trusting a client-supplied MIME type. */
+export function hasSupportedCaptureSignature(bytes: Uint8Array, mediaType: string): boolean {
+  const type = normalizeMediaType(mediaType);
+  const ascii = (start: number, value: string) =>
+    [...value].every((char, index) => bytes[start + index] === char.charCodeAt(0));
+
+  switch (type) {
+    case 'audio/webm':
+      return bytes.length >= 4 && bytes[0] === 0x1a && bytes[1] === 0x45 && bytes[2] === 0xdf && bytes[3] === 0xa3;
+    case 'audio/ogg':
+      return bytes.length >= 4 && ascii(0, 'OggS');
+    case 'audio/mp4':
+    case 'audio/m4a':
+    case 'audio/x-m4a':
+      return bytes.length >= 8 && ascii(4, 'ftyp');
+    case 'audio/wav':
+    case 'audio/x-wav':
+      return bytes.length >= 12 && ascii(0, 'RIFF') && ascii(8, 'WAVE');
+    case 'audio/mpeg':
+      return bytes.length >= 3 && (ascii(0, 'ID3') || (bytes[0] === 0xff && (bytes[1]! & 0xe6) === 0xe2));
+    case 'audio/aac':
+      return bytes.length >= 7 && bytes[0] === 0xff && (bytes[1]! & 0xf6) === 0xf0;
+    default:
+      return false;
+  }
+}
+
 export type CaptureInput = {
   /** Client-generated id so a retried upload is not stored twice. */
   captureId: string;
@@ -77,6 +104,9 @@ export async function captureVoiceRecording(
   }
   if (!isSupportedCaptureMediaType(input.mediaType)) {
     throw validationFailed('That audio format is not supported', { mediaType: input.mediaType });
+  }
+  if (!hasSupportedCaptureSignature(input.bytes, input.mediaType)) {
+    throw validationFailed('The uploaded file does not match the selected audio format');
   }
 
   const scope = { businessId: context.businessId };

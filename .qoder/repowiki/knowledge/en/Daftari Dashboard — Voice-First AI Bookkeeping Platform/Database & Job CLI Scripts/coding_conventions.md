@@ -1,0 +1,5 @@
+- Each script follows an IIFE-like shape: define `main()` returning `Promise<void>`, then `await main()` at the top level after importing dependencies.
+- Database access goes through `getDatabase()` / `closeDatabase()` from `@/server/db/client` rather than constructing connections inline.
+- Destructive operations (especially PostgreSQL schema drops) require both an explicit CLI flag (`--force`) and an env var (`DAFTARI_RESET_CONFIRM=yes`) before proceeding.
+- User-facing output is written via `process.stdout.write` with trailing newlines, while errors and warnings go to `process.stderr`; exit codes are set via `process.exitCode` instead of `process.exit`.
+- Seed and reset scripts call `runMigrations(db)` before performing data operations to ensure the schema is current.

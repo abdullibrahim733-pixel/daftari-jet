@@ -1,0 +1,4 @@
+- Each test file groups related cases under `describe` blocks and uses `it` for individual assertions, with `beforeEach` used only where shared state like rate-limit counters needs resetting.
+- Long-running setup (DB creation, migrations, seed data) is centralized in `createFixture`, which returns a `Fixture` object containing `db`, `userId`, `businessId`, `context`, `scope`, and an `other` tenant for isolation checks.
+- Environment variables that affect behavior (e.g. `NODE_ENV`, `DAFTARI_ALLOW_DEV_LOGIN`) are captured before mutation and restored in a `finally` block so tests do not leak state.
+- Assertions use `node:assert/strict` equality and truthiness checks rather than custom matchers, keeping the suite free of third-party assertion libraries.

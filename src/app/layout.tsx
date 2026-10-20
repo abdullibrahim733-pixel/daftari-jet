@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: '%s | Daftari',
   },
   description:
-    'Voice-first bookkeeper for Tanzanian small businesses. Send a WhatsApp voice note, review what Daftari understood, then confirm.',
+    'Voice-first bookkeeping for Tanzanian small businesses. Record, review, and confirm business activity.',
   applicationName: 'Daftari',
   robots: { index: false, follow: false },
 };
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#0B0B0F',
+  themeColor: '#0D1B2A',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

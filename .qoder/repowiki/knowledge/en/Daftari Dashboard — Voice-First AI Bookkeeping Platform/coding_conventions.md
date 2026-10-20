@@ -1,0 +1,4 @@
+- Node entry points (CLI scripts and tests) import `./scripts/register-alias.mjs` before any TypeScript file to resolve project path aliases.
+- Financial amounts are stored as integer minor units and presented in TZS with the business timezone `Africa/Dar_es_Salaam`.
+- Every proposed or confirmed record links back to its source event/transcript, preserving an auditable chain from inbound message to final ledger entry.
+- AI-generated financial records never enter the confirmed ledger without explicit human confirmation enforced by the backend.

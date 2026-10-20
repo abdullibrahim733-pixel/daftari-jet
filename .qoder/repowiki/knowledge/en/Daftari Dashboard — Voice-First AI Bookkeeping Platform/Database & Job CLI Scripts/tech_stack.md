@@ -1,0 +1,1 @@
+Plain Node ESM with TypeScript source files executed directly (no bundler); relies on `node:module.registerHooks` for runtime path resolution because Application Control blocks native Vite/Vitest bindings.

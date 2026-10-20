@@ -1,70 +1,64 @@
 /*
- * Single token source for the Daftari Dashboard (Apple Design System).
+ * Single token source for the Daftari Dashboard.
  *
- * Core principles: Clarity, Deference, Depth.
- *   - Pitch-black matte background #0B0B0F for depth
- *   - Stark White #FFFFFF for text and core geometric structures
- *   - Vibrant Crimson Red #FF1133 used with absolute constraint — only for
- *     high-priority interactive accents, single active tab markers, or terminal
- *     focal points. Never flood the screen with red.
- *   - San Francisco (SF Pro) primary, Inter/Roboto Mono fallback for data
- *   - Bento grid cards with soft subtle borders (1px #222) or faint gradients
- *     (#16161D) floating off the pitch-black background
- *   - Fluid spring-physics micro-interactions, backdrop-filter blur(20px)
+ * Core principles: clarity, calm, and practical depth.
+ *   - Deep Navy #0D1B2A anchors the interface.
+ *   - Saffron Orange #FF8A00 is reserved for primary actions and active states.
+ *   - Warm Ivory #FFF7E6 and blue-grey provide readable contrast.
  */
 
 @theme {
-  /* Brand — Apple Design System */
-  --color-black-matte: #0b0b0f;
-  --color-white: #ffffff;
-  --color-crimson: #ff1133;
-  --color-crimson-hover: #e60e2d;
+  /* Daftari brand */
+  --color-black-matte: #0d1b2a;
+  --color-white: #fff7e6;
+  --color-crimson: #ff8a00;
+  --color-crimson-hover: #e67c00;
 
-  /* Surfaces — layered depth on pitch-black */
-  --color-surface: #0b0b0f;
-  --color-surface-raised: #121217;
-  --color-surface-subtle: #16161d;
-  --color-surface-sunken: #0f0f14;
-  --color-surface-disabled: #1a1a20;
-  --color-surface-inverse: #ffffff;
-  --color-surface-inverse-soft: #f2f2f7;
+  /* Layered navy surfaces */
+  --color-surface: #0d1b2a;
+  --color-surface-raised: #10263a;
+  --color-surface-subtle: #122b41;
+  --color-surface-sunken: #0a1724;
+  --color-surface-disabled: #18334a;
+  --color-surface-inverse: #fff7e6;
+  --color-surface-inverse-soft: #f2eadb;
 
-  /* Borders — soft, subtle */
-  --color-border-subtle: #222222;
-  --color-border-strong: #3a3a3a;
-  --color-border-inverse: #ffffff;
-  --color-border-crimson: #ff1133;
+  /* Borders */
+  --color-border-subtle: #263b4d;
+  --color-border-strong: #52697d;
+  --color-border-inverse: #0d1b2a;
+  --color-border-crimson: #ff8a00;
 
-  /* Text — stark white for clarity */
-  --color-text: #ffffff;
-  --color-text-muted: #8e8e93;
-  --color-text-subtle: #636366;
-  --color-text-inverse: #0b0b0f;
-  --color-text-inverse-muted: #aeb7c2;
-  --color-text-link: #ffffff;
+  /* Text */
+  --color-text: #fff7e6;
+  --color-text-muted: #9eb3c8;
+  --color-text-subtle: #7f97ad;
+  --color-text-inverse: #0d1b2a;
+  --color-text-inverse-muted: #52697d;
+  --color-text-link: #fff7e6;
 
-  /* Semantic state — crimson for danger only */
-  --color-state-success: #30d158;
-  --color-state-success-surface: #1c3a24;
-  --color-state-warning: #ffcc00;
-  --color-state-warning-surface: #2a2400;
-  --color-state-danger: #ff1133;
-  --color-state-danger-surface: #2a0a12;
-  --color-state-info: #0a84ff;
-  --color-state-info-surface: #0a1a33;
-  --color-state-neutral-surface: #1a1a20;
+  /* Semantic states */
+  --color-state-success: #74c69d;
+  --color-state-success-surface: #173b34;
+  --color-state-warning: #ffbd70;
+  --color-state-warning-surface: #3a2b19;
+  --color-state-danger: #ef766d;
+  --color-state-danger-surface: #3b2328;
+  --color-state-info: #8eb8d6;
+  --color-state-info-surface: #18334a;
+  --color-state-neutral-surface: #18334a;
 
-  /* Accents — crimson with absolute constraint */
-  --color-action-primary: #ff1133;
-  --color-action-primary-hover: #e60e2d;
-  --color-action-primary-text: #ffffff;
-  --color-focus-ring: #ff1133;
+  /* Accents */
+  --color-action-primary: #ff8a00;
+  --color-action-primary-hover: #e67c00;
+  --color-action-primary-text: #0d1b2a;
+  --color-focus-ring: #ff8a00;
 
   /* Charts */
-  --color-chart-sales: #30d158;
-  --color-chart-expenses: #ff1133;
-  --color-chart-grid: #222222;
-  --color-chart-axis: #636366;
+  --color-chart-sales: #74c69d;
+  --color-chart-expenses: #ff8a00;
+  --color-chart-grid: #263b4d;
+  --color-chart-axis: #7f97ad;
 
   /* Radii — Apple-style rounded rectangles */
   --radius-xs: 6px;

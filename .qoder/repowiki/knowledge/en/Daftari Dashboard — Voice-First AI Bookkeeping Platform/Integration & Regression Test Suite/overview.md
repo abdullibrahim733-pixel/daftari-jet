@@ -1,0 +1,1 @@
+Node:test-based integration tests that exercise the server's auth, ledger, inventory, media, reporting, and export features against a real SQLite database.

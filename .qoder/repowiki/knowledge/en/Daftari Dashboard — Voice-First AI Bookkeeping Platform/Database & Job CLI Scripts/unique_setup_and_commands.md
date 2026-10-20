@@ -1,0 +1,1 @@
+Scripts are invoked through npm targets documented in each file's header (e.g. `npm run db:migrate`, `npm run db:seed`, `npm run jobs:run`). `reset-db.ts` requires `DAFTARI_RESET_CONFIRM=yes` plus `--force` to operate on PostgreSQL; all scripts need `register-alias.mjs` available so `@/` resolves against `src/`.

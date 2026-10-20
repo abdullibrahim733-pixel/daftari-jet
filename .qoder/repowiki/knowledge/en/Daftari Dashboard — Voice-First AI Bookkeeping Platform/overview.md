@@ -1,0 +1,1 @@
+Next.js dashboard that turns WhatsApp voice notes into reviewable accounting proposals and confirmed ledger records for Tanzanian small businesses, with Neon Postgres, S3/Blob storage, and a durable job queue.

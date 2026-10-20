@@ -1,0 +1,23 @@
+schema_version: 1
+module_path: ""
+title: Daftari Dashboard — Voice-First AI Bookkeeping Platform
+scope:
+    - PRD.md
+    - architecture.md
+    - AGENTS.md
+    - CLAUDE.md
+    - '# Daftari Bookkeeping Algorithm.md'
+    - .gitignore
+    - package.json
+    - package-lock.json
+    - next.config.ts
+    - tsconfig.json
+    - eslint.config.mjs
+    - postcss.config.mjs
+    - vercel.json
+    - skills-lock.json
+    - -w
+    - prodcheck.tmp.mjs
+source_files: []
+depends_on: []
+related_to: []

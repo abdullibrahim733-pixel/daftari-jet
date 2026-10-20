@@ -1,0 +1,1 @@
+Markdown-based agent skills consumed by the Neon CLI (`neon skills`) and MCP server; skills are fetched from https://neon.com/docs/ai/skills/* or installed via `neon skills -s <name>`.

@@ -42,7 +42,8 @@ function nextCaptureId(): string {
   return `cap_${counter}`;
 }
 
-const audio = (label = 'webm-audio') => Buffer.from(`fake-${label}-bytes`);
+const audio = (label = 'webm-audio') =>
+  Buffer.concat([Buffer.from([0x1a, 0x45, 0xdf, 0xa3]), Buffer.from(`fake-${label}-bytes`)]);
 
 /** Inserts a draft the way the manual-draft adapter would leave it. */
 async function createDraft(
@@ -151,6 +152,21 @@ describe('captureVoiceRecording', () => {
           captureId: nextCaptureId(),
           bytes: audio(),
           mediaType: 'application/pdf',
+          durationSeconds: null,
+        }),
+      (error: AppError) => error.code === 'VALIDATION_FAILED',
+    );
+  });
+
+  it('rejects file contents that do not match the declared audio format', async () => {
+    const fixture = await createFixture();
+
+    await assert.rejects(
+      async () =>
+        await captureVoiceRecording(fixture.db, fixture.context, {
+          captureId: nextCaptureId(),
+          bytes: Buffer.from('not audio'),
+          mediaType: 'audio/webm',
           durationSeconds: null,
         }),
       (error: AppError) => error.code === 'VALIDATION_FAILED',

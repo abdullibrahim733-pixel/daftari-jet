@@ -21,6 +21,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
+import DaftariLogoMark from '@/components/DaftariLogoMark';
 import { createTranslator } from '@/lib/localization';
 
 type Business = {
@@ -43,13 +44,16 @@ const t = createTranslator('en');
 const NAV_ITEMS = [
   { href: '/record', key: 'record', icon: '●', mobile: true },
   { href: '/reports', key: 'reports', icon: '▥', mobile: true },
-  { href: '/review', key: 'review', icon: '◷', mobile: true },
-  { href: '/records', key: 'records', icon: '▤', mobile: true },
-  { href: '/deni', key: 'deni', icon: '◎', mobile: false },
+  { href: '/review', key: 'review', icon: '◷', mobile: false },
+  { href: '/records', key: 'records', icon: '▤', mobile: false },
+  { href: '/deni', key: 'deni', icon: '◎', mobile: true },
   { href: '/inventory', key: 'inventory', icon: '▙', mobile: false },
   { href: '/overview', key: 'overview', icon: '◫', mobile: false },
   { href: '/settings', key: 'settings', icon: '⚙', mobile: false },
 ] as const;
+const MOBILE_NAV_KEYS = ['overview', 'record', 'reports', 'deni'] as const;
+const MOBILE_NAV_LABELS = { overview: 'mobileNav.home', record: 'mobileNav.record', reports: 'mobileNav.reports', deni: 'mobileNav.debt' } as const;
+const mobileT = createTranslator('sw');
 const NAV_LINKS = NAV_ITEMS;
 
 const NAV_LABELS = {
@@ -250,8 +254,8 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       >
         <div className="sidebar__top">
           <Link className="brand-lockup" href="/" aria-label={t('app.name')}>
-            <span className="brand-mark" aria-hidden="true">d</span>
-            <span className="brand-name">daftari<span>.</span></span>
+            <DaftariLogoMark className="brand-logo-mark" />
+            <span className="brand-name">Daftari<span>AI</span></span>
           </Link>
 
           <button
@@ -353,8 +357,8 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
         <header className="topbar">
           <div className="topbar-mobile-brand">
             <Link className="brand-lockup" href="/" aria-label={t('app.name')}>
-              <span className="brand-mark" aria-hidden="true">d</span>
-              <span className="brand-name">daftari<span>.</span></span>
+              <DaftariLogoMark className="brand-logo-mark" />
+              <span className="brand-name">Daftari<span>AI</span></span>
             </Link>
           </div>
           <div className="topbar-context">
@@ -412,7 +416,9 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       </div>
 
       <nav className="mobile-nav" aria-label={t('nav.mobile')}>
-        {NAV_ITEMS.filter((item) => item.mobile).map((item) => {
+        {MOBILE_NAV_KEYS.map((key) => {
+          const item = NAV_ITEMS.find((entry) => entry.key === key);
+          if (!item) return null;
           const active = routeIsActive(pathname, item.href);
           return (
             <Link
@@ -422,7 +428,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
               aria-current={active ? 'page' : undefined}
             >
               <span aria-hidden="true">{item.icon}</span>
-              <small>{t(NAV_LABELS[item.key])}</small>
+              <small>{mobileT(MOBILE_NAV_LABELS[key])}</small>
             </Link>
           );
         })}
@@ -434,7 +440,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
           aria-expanded={moreOpen}
           aria-haspopup="true"
         >
-          <span aria-hidden="true">···</span><small>{t('app.more')}</small>
+          <span aria-hidden="true">···</span><small>{mobileT('mobileNav.more')}</small>
         </button>
       </nav>
 

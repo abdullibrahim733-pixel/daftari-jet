@@ -1,0 +1,4 @@
+- Each skill lives in its own directory under `.agents/skills/<name>/` and exposes a single `SKILL.md` file with a YAML front-matter block declaring `name`, `description`, and optional `parent`/`metadata.source` fields.
+- Child skills declare their relationship to the parent via a `parent: <parent-skill>` entry in the front-matter (e.g. `neon-postgres` lists `neon`).
+- The `metadata.source` field points to the canonical upstream location in the `neondatabase/agent-skills` GitHub repository, keeping this local copy traceable to the source of truth.
+- Cross-references between skills use explicit URLs to `https://neon.com/docs/ai/skills/<skill>/SKILL.md` rather than relative paths, so skills remain portable outside the repo.

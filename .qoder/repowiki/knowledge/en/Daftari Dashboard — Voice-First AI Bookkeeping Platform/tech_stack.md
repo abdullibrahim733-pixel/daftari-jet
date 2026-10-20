@@ -1,0 +1,1 @@
+Next.js 16 + React 19 on Node ≥24, TypeScript 5.9, Tailwind CSS 4, Zod 4 for validation, Neon serverless Postgres client, AWS SDK S3 / @vercel/blob for media, ESLint 9 with typescript-eslint, and Node:test for integration tests.

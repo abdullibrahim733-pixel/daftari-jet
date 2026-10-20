@@ -1,0 +1,1 @@
+Skills are not built here — they are installed into an agent workspace via `neon skills -s <skill-name> [--global] [-y] [--agent <name>]`, updated with `neon skills update`, and discovered through the registry at https://neon.com/.well-known/agent-skills when the CLI is unavailable.

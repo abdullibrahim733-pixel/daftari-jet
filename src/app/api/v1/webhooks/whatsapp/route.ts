@@ -11,8 +11,10 @@ import { ingestWhatsAppDelivery } from '@/server/services/ingestion';
 import { whatsappIngestionEnabled } from '@/server/config/env';
 import { getDatabase } from '@/server/db/client';
 import { notFound } from '@/lib/errors';
-import { route, ok, created } from '@/server/http/route';
+import { readBoundedBody, route, ok, created } from '@/server/http/route';
 import { logger } from '@/server/observability/logger';
+
+const MAX_WEBHOOK_BODY_BYTES = 1024 * 1024;
 
 /**
  * Reconstructs the absolute URL the provider signed.
@@ -38,7 +40,7 @@ export const POST = route(async (request) => {
     throw notFound();
   }
 
-  const rawBody = await request.text();
+  const rawBody = new TextDecoder().decode(await readBoundedBody(request, MAX_WEBHOOK_BODY_BYTES));
   const signature =
     request.headers.get('x-twilio-signature') ??
     request.headers.get('x-daftari-signature') ??

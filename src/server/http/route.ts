@@ -82,7 +82,6 @@ export function route<Params = Record<string, string>>(handler: RouteHandler<Par
       logger.error('http.unhandled_error', {
         requestId,
         path: new URL(request.url).pathname,
-        message: error instanceof Error ? error.message : String(error),
       });
       return errorResponse(
         500,
@@ -92,6 +91,54 @@ export function route<Params = Record<string, string>>(handler: RouteHandler<Par
       );
     }
   };
+}
+
+/**
+ * Reads a request body with a hard byte limit. Content-Length is an early
+ * rejection hint only; streamed chunks are counted as well because callers
+ * cannot trust that header.
+ */
+export async function readBoundedBody(request: Request, maxBytes: number): Promise<Uint8Array> {
+  if (!Number.isSafeInteger(maxBytes) || maxBytes < 1) {
+    throw new RangeError('maxBytes must be a positive safe integer');
+  }
+
+  const declaredLength = request.headers.get('content-length');
+  if (declaredLength !== null && /^\d+$/.test(declaredLength) && Number(declaredLength) > maxBytes) {
+    throw new AppError(413, ERROR_CODES.VALIDATION_FAILED, 'The request body is too large');
+  }
+
+  if (!request.body) return new Uint8Array();
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      totalBytes += value.byteLength;
+      if (totalBytes > maxBytes) {
+        try {
+          await reader.cancel();
+        } catch {
+          // Preserve the size-limit error even if the transport cannot cancel.
+        }
+        throw new AppError(413, ERROR_CODES.VALIDATION_FAILED, 'The request body is too large');
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+
+  const body = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return body;
 }
 
 /** Parses a JSON body, reporting a malformed body as a validation failure. */

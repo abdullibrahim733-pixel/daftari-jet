@@ -13,9 +13,11 @@ import { assertCan } from '@/server/permissions/policy';
 import { captureVoiceRecording, MAX_CAPTURE_BYTES } from '@/server/services/capture';
 import { runDueJobs } from '@/server/services/jobs';
 import { validationFailed } from '@/lib/errors';
-import { created, route } from '@/server/http/route';
+import { created, readBoundedBody, route } from '@/server/http/route';
 
 export const maxDuration = 60;
+
+const MAX_CAPTURE_REQUEST_BYTES = MAX_CAPTURE_BYTES + 64 * 1024;
 
 const captureFieldsSchema = z.object({
   captureId: z.string().trim().min(8).max(80),
@@ -34,7 +36,20 @@ export const POST = route(async (request) => {
   const { db, context } = await requireTenant();
   assertCan(context.role, 'records.capture');
 
-  const form = await request.formData();
+  const body = await readBoundedBody(request, MAX_CAPTURE_REQUEST_BYTES);
+  const bodyBuffer = new ArrayBuffer(body.byteLength);
+  new Uint8Array(bodyBuffer).set(body);
+  const boundedRequest = new Request(request.url, {
+    method: request.method,
+    headers: request.headers,
+    body: bodyBuffer,
+  });
+  let form: FormData;
+  try {
+    form = await boundedRequest.formData();
+  } catch {
+    throw validationFailed('The upload form is not valid');
+  }
   const file = form.get('audio');
   if (!(file instanceof File)) {
     throw validationFailed('Attach the recording as the "audio" field');

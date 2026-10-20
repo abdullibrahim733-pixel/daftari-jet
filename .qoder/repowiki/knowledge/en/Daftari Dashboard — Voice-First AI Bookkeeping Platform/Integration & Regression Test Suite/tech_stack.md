@@ -1,0 +1,1 @@
+Node.js built-in `node:test` runner with `node:assert/strict`; SQLite via the project's own `@/server/db/client` and migration layer; no external test framework or mocking library is used.

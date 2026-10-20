@@ -1,0 +1,61 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: en-US
+branch: master
+nodes_managed: true
+exported_at: "2026-10-18T10:06:50Z"
+modules:
+    "":
+        dir_name: Daftari Dashboard — Voice-First AI Bookkeeping Platform
+        title: Daftari Dashboard — Voice-First AI Bookkeeping Platform
+        scope:
+            - PRD.md
+            - architecture.md
+            - AGENTS.md
+            - CLAUDE.md
+            - '# Daftari Bookkeeping Algorithm.md'
+            - .gitignore
+            - package.json
+            - package-lock.json
+            - next.config.ts
+            - tsconfig.json
+            - eslint.config.mjs
+            - postcss.config.mjs
+            - vercel.json
+            - skills-lock.json
+            - -w
+            - prodcheck.tmp.mjs
+        source_files: []
+        children:
+            - agent_skills
+            - scripts
+            - tests
+        depends_on: []
+        related_to: []
+    agent_skills:
+        dir_name: Neon Agent Skills Catalog
+        title: Neon Agent Skills Catalog
+        scope:
+            - .agents/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    scripts:
+        dir_name: Database & Job CLI Scripts
+        title: Database & Job CLI Scripts
+        scope:
+            - scripts/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tests:
+        dir_name: Integration & Regression Test Suite
+        title: Integration & Regression Test Suite
+        scope:
+            - tests/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
