@@ -2,16 +2,20 @@
 
 **Status:** Implementation specification  
 **Product:** Daftari AI  
-**Surface:** Daftari Dashboard (merchant web application)  
+**Surface:** Daftari merchant apps — Expo/React Native (iOS, Android) and the Next.js web app, sharing one backend  
 **Audience:** Product, design, engineering, QA, and AI coding agents  
 **Initial market:** Small businesses in Tanzania  
 **Document rule:** This document defines the user-visible product. `architecture.md` defines the implementation shape.
 
 ## 1. Product summary
 
-Daftari is a voice-first, WhatsApp-native AI bookkeeper for Tanzanian small businesses. A merchant records a voice note or sends a supported business message through WhatsApp. Daftari transcribes it, interprets likely business events, and creates proposed records. The Daftari Dashboard is the merchant’s review and control center: it displays incoming activity, lets the merchant correct and confirm proposals, and turns confirmed records into a useful view of sales, expenses, cash flow, inventory, and customer debts (deni).
+Daftari is an AI-first, voice-first bookkeeper for Tanzanian small businesses. A merchant records a voice note inside Daftari on iOS, Android, or the web. Daftari transcribes it, interprets likely business events, and creates proposed records. The merchant reviews, corrects, and confirms them, and confirmed records become a useful view of sales, expenses, cash flow, inventory, and customer debts (deni).
 
-The dashboard is not the primary recording channel. It must make the WhatsApp workflow visible and controllable, and may offer an optional upload/manual-entry fallback when the merchant is already at a computer.
+**Direction update:** In-app AI capture is the primary recording channel. WhatsApp capture is **deferred**: it is off by default, not part of the first release, and must be separately prioritized and security-reviewed before re-enabling. Existing WhatsApp requirements elsewhere in this document describe the deferred channel and do not gate the first release.
+
+**Primary experience:** after onboarding, the first screen is **Record**; **Reports** is second in navigation. Review, Records, Deni, Inventory, and Settings follow, or live under “More” on small screens. Microphone permission is requested when the user first taps Record, not at signup. “Start recording within 30 seconds of opening the app” is an activation target to measure with real users and devices, not a promise.
+
+Native mobile clients use the same authenticated HTTP APIs as the web app and never access the database directly. Mobile sessions use a bearer-token contract stored in iOS Keychain / Android Keystore, with server-side validation and revocation.
 
 ### Product promise
 
@@ -27,7 +31,7 @@ Many small merchants keep business knowledge across memory, paper notebooks, mes
 
 ### Product principles
 
-1. **Voice-first, dashboard-supported.** Recording through WhatsApp is the default; the dashboard provides visibility, review, correction, reporting, and administration.
+1. **Voice-first, capture-first.** Recording in the Daftari app (mobile or web) is the default; WhatsApp is deferred. The app also provides review, correction, reporting, and administration.
 2. **Human confirmation for money records.** AI extraction creates a proposal. It never silently posts or alters a sale, expense, payment, debt, or stock movement.
 3. **Show the source.** Every proposal and confirmed record links back to its source message, transcript, import, or manual entry.
 4. **Plain language.** Prefer merchant language (“Sales”, “Money in”, “People who owe you”) over accounting jargon. Provide English and Swahili-ready copy; do not machine-translate financial meaning without review.
@@ -40,7 +44,7 @@ Many small merchants keep business knowledge across memory, paper notebooks, mes
 ### Goals
 
 - Give a merchant a trustworthy overview of confirmed business activity.
-- Turn WhatsApp voice notes/messages into reviewable proposed records.
+- Turn in-app voice recordings (and, later, WhatsApp messages) into reviewable proposed records.
 - Let authorized users correct, confirm, reject, and explain proposals.
 - Keep a durable, attributable history of source, model proposal, human changes, and final decision.
 - Surface simple insights from confirmed records without claiming certainty the data does not support.
@@ -51,7 +55,8 @@ Many small merchants keep business knowledge across memory, paper notebooks, mes
 - Replacing a full accounting, tax filing, payroll, or statutory reporting system.
 - Automatically initiating payments, collecting money, or making lending/credit decisions.
 - Treating an AI guess as a verified transaction or bank/mobile-money settlement.
-- Building the WhatsApp recording client inside the dashboard.
+- WhatsApp capture in the first release (deferred).
+- Direct database access from mobile clients, or WebView-wrapped web UI as the mobile app.
 - Supporting every business type, country, currency, payment provider, or language at launch.
 - Full POS, invoicing, supplier procurement, or omnichannel commerce workflows.
 
@@ -61,7 +66,7 @@ Many small merchants keep business knowledge across memory, paper notebooks, mes
 
 Supporting metrics:
 
-- **Activation:** percentage of onboarded businesses that connect WhatsApp and confirm their first proposed record within 7 days.
+- **Activation:** percentage of onboarded businesses that confirm their first proposed record within 7 days (also measure time from app open to first recording; the 30-second target is a measurement, not a promise).
 - **Time to value:** median time from the first inbound voice note to first confirmed record.
 - **Review completion:** proposals confirmed, corrected, or rejected within 24 hours / all proposals created in that period.
 - **Extraction quality:** field-level precision/recall on a consented, manually adjudicated evaluation set; slice by language, accent, record type, and audio quality.
@@ -103,23 +108,29 @@ Permissions are enforced by the backend for every request; hiding a button is no
 
 Persistent workspace selector at the top of the navigation selects the active business. The selected business is visible on every page. On desktop use a left navigation rail; on mobile use a compact top bar and bottom navigation for the highest-frequency areas, with the rest under “More”.
 
-Primary navigation order:
+Primary navigation order (capture-first):
 
-1. **Overview** — business snapshot and recent activity.
-2. **Review** — inbox of proposed records requiring a decision.
-3. **Records** — searchable, filterable confirmed ledger.
-4. **Deni** — customer balances and payment history.
-5. **Inventory** — stock and movement view, if enabled.
-6. **Reports** — period summaries and exports.
-7. **Settings** — business profile, WhatsApp connection, team, privacy, and preferences.
+1. **Record** — the signed-in landing screen; record, upload status, retry.
+2. **Reports** — confirmed-only period summaries and exports.
+3. **Review** — inbox of proposed records requiring a decision.
+4. **Records** — searchable, filterable confirmed ledger.
+5. **Deni** — customer balances and payment history.
+6. **Inventory** — stock and movement view, if enabled.
+7. **Settings** — business profile, team, privacy, and preferences. (WhatsApp connection is hidden while the channel is deferred.)
 
-Global controls: date range, business switcher, notification indicator, help, account menu, and language selector (English / Kiswahili when translations are ready). A compact **Review N** badge appears only when actionable proposals exist. Do not add a fake record button that implies dashboard recording is the default.
+On mobile, Record and Reports are the first bottom-navigation items; the rest may sit under “More”. The former Overview snapshot may become a section of Reports.
+
+Global controls: date range, business switcher, notification indicator, help, account menu, and language selector (English / Kiswahili when translations are ready). A compact **Review N** badge appears only when actionable proposals exist.
+
+### Capture lifecycle
+
+record → upload (retryable by capture ID) → processing (transcribe, extract) → review → human confirmation. Recording and upload state stays visible on weak connections; a financial confirmation is never queued to execute silently later.
 
 ## 6. Screens and detailed requirements
 
 ### 6.1 Sign in and business onboarding
 
-**Purpose:** Establish a secure account, business workspace, owner, preferred language, timezone, currency, and WhatsApp connection.
+**Purpose:** Establish a secure account, business workspace, owner, preferred language, timezone, and currency, then take the owner straight to Record.
 
 **Screen components:** Daftari mark, concise benefit statement, phone/email authentication UI based on the chosen identity provider, privacy link, language control, progress indicator, and help link.
 
@@ -128,18 +139,23 @@ Global controls: date range, business switcher, notification indicator, help, ac
 1. Create/sign in to account and verify identity.
 2. Create business: name, business type (free choice plus “Other”), optional location, timezone default `Africa/Dar_es_Salaam`, and currency default TZS.
 3. Choose dashboard language and basic preferences.
-4. Explain what Daftari reads from WhatsApp and request the integration’s required consent/authorization.
-5. Connect WhatsApp Business integration using the approved provider flow; show connected number and status without exposing secrets.
-6. Invite team (skippable); explain roles.
-7. Show a guided sample or a clear next step: send the business WhatsApp number a short sales voice note.
+4. Explain how voice recordings are processed (transcription, AI extraction, retention) and the human-confirmation rule. Do not request microphone access here; ask when the user first taps Record.
+5. Invite team (skippable); explain roles.
+6. Land on **Record** with a clear next step: record a short sales voice note.
 
-**States:** initial, validation error, verification pending, connection pending, connection failed with retry, connected, and abandoned/resumable. Never imply a connection succeeded until verified by the backend.
+**States:** initial, validation error, verification pending, and abandoned/resumable.
 
-**Acceptance:** A new owner can reach an empty Overview with a business workspace and clear WhatsApp connection state. Onboarding does not create fabricated financial records.
+**Acceptance:** A new owner reaches Record with a business workspace and an empty ledger. Onboarding does not create fabricated financial records.
+
+### 6.1a Record (landing screen)
+
+**Purpose:** Capture a business event by voice with minimal steps. Signed-in users land here (`/` redirects to `/record`).
+
+**Requirements:** one-handed start/stop/replay/submit; microphone permission requested on first Record tap with a clear denied-state explanation; visible upload and processing status (uploading, transcribing, drafting, ready for review, failed with retry); safe retry using the capture ID; draft links to Review for human confirmation. A recording is never posted to the ledger without confirmation.
 
 ### 6.2 Overview
 
-**Purpose:** Answer “How is my business doing?” quickly, based on confirmed records only.
+**Purpose:** Answer “How is my business doing?” quickly, based on confirmed records only. Available at `/overview` from the secondary navigation; it is not the landing screen. Its content may later merge into Reports.
 
 **Layout, top to bottom:**
 
@@ -153,7 +169,7 @@ Global controls: date range, business switcher, notification indicator, help, ac
 
 **Rules:** Pending proposals are never included in confirmed totals. Refunds and voids use explicit treatment in calculation copy. Do not call net cash movement “profit”. Do not compare across periods with different coverage without explaining it.
 
-**States:** first-use empty state with “Send a WhatsApp voice note to start”; loading skeleton; partial-data state; populated state; stale-data indicator; error state with retry; date range with no records. Data freshness and last successful sync must be visible when delayed.
+**States:** first-use empty state with “Record a voice note to start”; loading skeleton; partial-data state; populated state; stale-data indicator; error state with retry; date range with no records. Data freshness must be visible when processing is delayed.
 
 ### 6.3 Review inbox
 
@@ -161,11 +177,11 @@ Global controls: date range, business switcher, notification indicator, help, ac
 
 **Queue tabs/filters:** Needs review, Missing details, Failed processing, Recently decided. Filters: record type, source, received date, confidence band (internal/advanced only), and assignee if assignments exist. Default sort: oldest actionable first, with newest activity clearly shown.
 
-**Queue row/card:** source icon (WhatsApp voice/text/manual/import), sender/source label, received timestamp, detected record type, short transcript or message preview, proposed amount if present, missing-field indicator, processing status, and accessible actions: Open, Reject. Do not expose raw model confidence as a guarantee; use a simple “Check details” cue.
+**Queue row/card:** source icon (in-app voice/manual/import; WhatsApp when re-enabled), sender/source label, received timestamp, detected record type, short transcript or message preview, proposed amount if present, missing-field indicator, processing status, and accessible actions: Open, Reject. Do not expose raw model confidence as a guarantee; use a simple “Check details” cue.
 
 **Bulk actions:** none in MVP. A decision on one proposal must not accidentally confirm others.
 
-**Queue states:** empty (include explanation and WhatsApp connection status), loading, loaded, no filter matches, partial pipeline errors, and stale. Pagination/infinite loading must preserve filter and scroll position where feasible.
+**Queue states:** empty (include explanation and a Record shortcut), loading, loaded, no filter matches, partial pipeline errors, and stale. Pagination/infinite loading must preserve filter and scroll position where feasible.
 
 ### 6.4 Proposal review detail
 
@@ -228,9 +244,9 @@ All money fields use integer minor units in storage and TZS presentation where a
 
 ### 6.9 Settings
 
-Sections: Business profile; language, currency, and timezone; WhatsApp connection and status; team and roles; privacy/data controls; notification preferences; export; account/security; support.
+Sections: Business profile; language, currency, and timezone; team and roles; privacy/data controls; notification preferences; export; account/security; support. A WhatsApp connection section appears only when that channel is re-enabled.
 
-Integration controls include connected/disconnected/error state, authorized phone identity, last webhook received, reconnect steps, and disconnect action. Explain the effect of disconnecting on future ingestion. Do not show tokens or provider credentials.
+If the WhatsApp channel is re-enabled, integration controls include connected/disconnected/error state, authorized phone identity, last webhook received, reconnect steps, and disconnect action. Do not show tokens or provider credentials.
 
 Privacy controls make available product-defined retention options, export request, deletion request, consent status, and contact path. Deletion must follow the platform’s retention and legal requirements and must not promise immediate erasure when immutable audit/backup retention applies.
 
@@ -238,8 +254,8 @@ Privacy controls make available product-defined retention options, export reques
 
 ### Voice note to confirmed record
 
-1. Merchant sends a WhatsApp voice note to the connected Daftari business number.
-2. Provider webhook is authenticated and deduplicated. Daftari stores the source event and an encrypted audio object according to retention policy.
+1. Merchant opens Record in the mobile or web app and records a voice note.
+2. The app uploads it to the authenticated capture API with a client-generated capture ID; retries are idempotent. Daftari stores the source and an encrypted audio object according to retention policy.
 3. The system acknowledges receipt promptly and queues processing.
 4. Speech-to-text creates a transcript with language and quality metadata.
 5. Extraction returns zero or more typed proposals with field provenance, confidence/uncertainty, and missing fields.
@@ -256,16 +272,20 @@ Privacy controls make available product-defined retention options, export reques
 4. Backend writes a versioned correction/reversal plus audit event in one transaction.
 5. Derived totals refresh; prior version remains available to authorized users.
 
-### WhatsApp outage or missed processing
+### Deferred: WhatsApp outage or missed processing
 
-Show connection health and the last received event. Queued events retry safely. A permanent failure appears in the review inbox with source and a retry/reprocess action where safe. Do not silently discard a message or claim it is recorded if only provider receipt, not processing, is known.
+Applies only if the WhatsApp channel is re-enabled. Show connection health and the last received event. Queued events retry safely. A permanent failure appears in the review inbox with source and a retry/reprocess action where safe. Do not silently discard a message or claim it is recorded if only provider receipt, not processing, is known.
+
+### Failed or delayed in-app capture
+
+The app preserves the recording and shows a retryable status. A failed transcription or extraction appears in the review inbox with the source and a safe retry action. Never claim a recording is booked until a human confirms it.
 
 ## 8. Functional requirements
 
 | ID | Requirement | Priority |
 |---|---|---|
 | FR-01 | A business owner can create a business workspace with Tanzania defaults and edit them. | P0 |
-| FR-02 | Authorized users can view connection status and see when WhatsApp source events arrive. | P0 |
+| FR-02 | Users can record in-app, see upload/processing status, and retry safely. (WhatsApp source visibility is deferred.) | P0 |
 | FR-03 | Every inbound source event is deduplicated and linked to a processing job and source artifact. | P0 |
 | FR-04 | Speech transcript and extraction proposal are visible in the dashboard with their processing state. | P0 |
 | FR-05 | No AI-created financial record enters confirmed ledger without an authorized human confirmation. | P0 |
@@ -314,7 +334,7 @@ Modern, calm, practical, warm, and trustworthy. Use generous whitespace, strong 
 2. Only confirmed records affect financial totals.
 3. All financial values display currency and clear sign/context; store money as integer minor units.
 4. Every proposed or confirmed record can be traced to its source or is explicitly marked manual.
-5. The Dashboard is a review/control surface; WhatsApp is the default capture surface.
+5. Record is the primary capture surface in the apps; WhatsApp is deferred.
 6. Never imply AI confidence equals truth or payment verification.
 7. Never expose one business’s data to another business through UI, API, search, exports, caches, or logs.
 8. Every state-changing financial action identifies the actor, time, reason where applicable, and prior values.
@@ -333,18 +353,18 @@ Modern, calm, practical, warm, and trustworthy. Use generous whitespace, strong 
 
 ## 11. Analytics and privacy boundaries
 
-Product analytics should use event names and properties from an approved schema and avoid raw transcript, audio, phone number, customer name, or amount unless explicitly required and approved. Suggested events: `business_created`, `whatsapp_connected`, `source_received`, `proposal_ready`, `proposal_opened`, `proposal_corrected`, `proposal_confirmed`, `proposal_rejected`, `record_corrected`, `export_requested`.
+Product analytics should use event names and properties from an approved schema and avoid raw transcript, audio, phone number, customer name, or amount unless explicitly required and approved. Suggested events: `business_created`, `capture_started`, `capture_uploaded`, `source_received`, `proposal_ready`, `proposal_opened`, `proposal_corrected`, `proposal_confirmed`, `proposal_rejected`, `record_corrected`, `export_requested`.
 
 Access to audio/transcripts is sensitive and should be separately logged. Analytics opt-in, retention, and consent follow the applicable product policy. Never use a merchant’s private recordings to train general models without a separate valid legal basis and clear consent.
 
 ## 12. Acceptance criteria for release
 
-1. Owner completes onboarding and sees a truthful connection status and usable empty Overview.
-2. Inbound WhatsApp voice event produces a source-linked transcript and proposal, or a visible failure state with retry/escalation.
+1. Owner completes onboarding and lands on Record with an empty ledger.
+2. An in-app voice recording produces a source-linked transcript and proposal, or a visible failure state with retry/escalation.
 3. A reviewer can compare audio/transcript to proposed fields, correct them, and see the exact effect before confirmation.
 4. A confirmed record appears in Records and appropriate Overview totals exactly once.
 5. A rejected or pending proposal never changes any confirmed total.
-6. Duplicate webhook delivery does not create a duplicate source, proposal, ledger record, or payment.
+6. Duplicate capture upload (same capture ID) or webhook delivery does not create a duplicate source, proposal, ledger record, or payment.
 7. Unauthorized users cannot confirm, edit, export, or inspect protected records by direct API request.
 8. A correction preserves before/after values, actor, timestamp, reason, and source lineage.
 9. Currency/date math is correct for TZS, the business timezone, and date-range boundaries.
@@ -368,7 +388,9 @@ Access to audio/transcripts is sensitive and should be separately logged. Analyt
 
 ## 14. Open decisions to resolve before production
 
-- WhatsApp Business API/provider, supported number ownership model, and template/notification constraints.
+- Mobile session contract (bearer token issue/renew/revoke), supported recording formats, and upload duration/size caps.
+- Whether the Expo app ships on both stores at launch, and the app-store privacy disclosures.
+- WhatsApp Business API/provider, number ownership model, and template constraints (deferred until the channel is prioritized).
 - Speech-to-text and extraction providers, supported languages, data residency/processing terms, and fallback model.
 - Exact audio/transcript retention periods and deletion behavior, including provider copies and backups.
 - Authentication provider, invitation lifecycle, and account recovery.

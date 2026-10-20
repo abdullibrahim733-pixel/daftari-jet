@@ -10,12 +10,13 @@
  * boundary, because `next/headers` is not callable outside a request.
  */
 
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { getDatabase } from '@/server/db/client';
 import { unauthenticated } from '@/lib/errors';
 import {
   SESSION_COOKIE_NAME,
   SESSION_TTL_SECONDS,
+  bearerTokenFrom,
   resolveSessionToken,
   sessionCookieOptions,
   type AuthenticatedSession,
@@ -24,12 +25,15 @@ import {
 // Re-exported so route handlers can reach the whole session contract from one
 // module; the implementations stay in the framework-free store.
 export {
+  MOBILE_CLIENT_HEADER,
   SESSION_COOKIE_NAME,
   SESSION_TTL_SECONDS,
+  bearerTokenFrom,
   devLoginEnabled,
   endSession,
   hashSessionToken,
   hashUserAgent,
+  isMobileClient,
   issueSession,
   newOpaqueSessionToken,
   sessionCookieOptions,
@@ -37,9 +41,12 @@ export {
 } from './session-store';
 export type { AuthenticatedSession, IssuedSession } from './session-store';
 
+/** The cookie wins; native clients, which have no cookie jar, send a bearer token. */
 export async function readSessionToken(): Promise<string | null> {
   const store = await cookies();
-  return store.get(SESSION_COOKIE_NAME)?.value ?? null;
+  const cookieToken = store.get(SESSION_COOKIE_NAME)?.value;
+  if (cookieToken) return cookieToken;
+  return bearerTokenFrom((await headers()).get('authorization'));
 }
 
 export async function setSessionCookie(token: string): Promise<void> {

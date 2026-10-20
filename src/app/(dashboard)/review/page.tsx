@@ -230,7 +230,7 @@ export default function ReviewQueuePage() {
             <p>{tab === 'needs_review' && !recordType && !sourceKind ? t('review.empty.body') : t('review.noMatch.body')}</p>
           </div>
           {tab === 'needs_review' && !recordType && !sourceKind && (
-            <Link className="button button-secondary" href="/settings">{t('review.empty.connectCta')}</Link>
+            <Link className="button button-secondary" href="/record">{t('review.empty.connectCta')}</Link>
           )}
         </section>
       ) : (

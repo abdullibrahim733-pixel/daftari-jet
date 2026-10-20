@@ -4,7 +4,7 @@
  * Creates the user, their first business, and an `owner` membership in one
  * transaction, then issues the same session cookie as sign-in. This is the
  * entry point that onboarding continues from: a brand new owner lands on an
- * empty Overview with a real workspace rather than a fabricated record.
+ * empty Record screen with a real workspace rather than a fabricated record.
  *
  * Sign-up is rate limited per client so the endpoint cannot be used to create
  * rows in bulk, and a taken address is reported plainly because the caller
@@ -13,7 +13,7 @@
 
 import { z } from 'zod';
 import { getDatabase, withTransaction } from '@/server/db/client';
-import { issueSession } from '@/server/auth/session-store';
+import { MOBILE_CLIENT_HEADER, isMobileClient, issueSession } from '@/server/auth/session-store';
 import { setSessionCookie } from '@/server/auth/session';
 import { checkPasswordPolicy, hashPassword } from '@/server/auth/password';
 import { clientKeyFrom, consume } from '@/server/auth/rate-limit';
@@ -107,7 +107,8 @@ export const POST = route(async (request) => {
     activeBusinessId: created.businessId,
     userAgent: request.headers.get('user-agent'),
   });
-  await setSessionCookie(issued.token);
+  const mobile = isMobileClient(request.headers.get(MOBILE_CLIENT_HEADER));
+  if (!mobile) await setSessionCookie(issued.token);
 
   logger.info('auth.registered', { userId: created.user.id });
 
@@ -120,6 +121,7 @@ export const POST = route(async (request) => {
       activeBusinessId: created.businessId,
       businesses,
       permissions: active ? permissionsForRole(active.role) : [],
+      ...(mobile ? { sessionToken: issued.token, expiresAt: issued.expiresAt } : {}),
     },
     { status: 201 },
   );

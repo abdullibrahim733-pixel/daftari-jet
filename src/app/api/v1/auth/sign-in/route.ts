@@ -12,7 +12,7 @@
 
 import { z } from 'zod';
 import { getDatabase } from '@/server/db/client';
-import { issueSession } from '@/server/auth/session-store';
+import { MOBILE_CLIENT_HEADER, isMobileClient, issueSession } from '@/server/auth/session-store';
 import { setSessionCookie } from '@/server/auth/session';
 import { verifyPassword } from '@/server/auth/password';
 import { clientKeyFrom, consume, reset } from '@/server/auth/rate-limit';
@@ -76,12 +76,15 @@ export const POST = route(async (request) => {
     activeBusinessId,
     userAgent: request.headers.get('user-agent'),
   });
-  await setSessionCookie(issued.token);
+  const mobile = isMobileClient(request.headers.get(MOBILE_CLIENT_HEADER));
+  if (!mobile) await setSessionCookie(issued.token);
 
   return ok({
     user: { id: user.id, displayName: user.display_name },
     activeBusinessId,
     businesses,
     permissions: active ? permissionsForRole(active.role) : [],
+    // Native clients keep this in Keychain / Keystore and send it as a bearer token.
+    ...(mobile ? { sessionToken: issued.token, expiresAt: issued.expiresAt } : {}),
   });
 });

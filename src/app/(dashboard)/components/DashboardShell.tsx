@@ -41,16 +41,16 @@ type SessionPayload = {
 const t = createTranslator('en');
 
 const NAV_ITEMS = [
-  { href: '/', key: 'overview', icon: '◫', mobile: true },
   { href: '/record', key: 'record', icon: '●', mobile: true },
+  { href: '/reports', key: 'reports', icon: '▥', mobile: true },
   { href: '/review', key: 'review', icon: '◷', mobile: true },
   { href: '/records', key: 'records', icon: '▤', mobile: true },
   { href: '/deni', key: 'deni', icon: '◎', mobile: false },
   { href: '/inventory', key: 'inventory', icon: '▙', mobile: false },
-  { href: '/reports', key: 'reports', icon: '▥', mobile: false },
+  { href: '/overview', key: 'overview', icon: '◫', mobile: false },
   { href: '/settings', key: 'settings', icon: '⚙', mobile: false },
 ] as const;
-const NAV_LINKS = NAV_ITEMS.filter((item) => item.key !== 'overview');
+const NAV_LINKS = NAV_ITEMS;
 
 const NAV_LABELS = {
   overview: 'nav.overview',

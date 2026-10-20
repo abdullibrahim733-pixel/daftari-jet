@@ -39,6 +39,7 @@ function recordingSupported(): boolean {
 export default function RecordPage() {
   const [phase, setPhase] = useState<Phase>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [failedSave, setFailedSave] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
@@ -131,6 +132,7 @@ export default function RecordPage() {
     if (!blob) return;
     setPhase('saving');
     setError(null);
+    setFailedSave(false);
     try {
       const form = new FormData();
       form.append('captureId', captureIdRef.current);
@@ -144,6 +146,7 @@ export default function RecordPage() {
       setPhase('saved');
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : t('record.failed'));
+      setFailedSave(true);
       setPhase('ready');
     }
   }, []);
@@ -158,6 +161,7 @@ export default function RecordPage() {
     durationRef.current = 0;
     setElapsed(0);
     setError(null);
+    setFailedSave(false);
     setPhase('idle');
   }, []);
 
@@ -174,6 +178,7 @@ export default function RecordPage() {
       {error && (
         <div className="notice notice-error" role="alert">
           <span>{error}</span>
+          {failedSave && <span>{t('record.retryHint')}</span>}
         </div>
       )}
 
@@ -211,7 +216,7 @@ export default function RecordPage() {
               )}
               {phase === 'ready' && (
                 <button className="button button-primary" type="button" onClick={() => void save()}>
-                  {t('record.save')}
+                  {failedSave ? t('record.retry') : t('record.save')}
                 </button>
               )}
               {phase === 'saving' && (
@@ -225,6 +230,7 @@ export default function RecordPage() {
                 </button>
               )}
             </div>
+            <p className="record-hint">{t('record.privacy')}</p>
           </div>
         )}
       </section>

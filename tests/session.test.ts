@@ -10,7 +10,13 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { createFixture } from './helpers/fixture';
-import { hashSessionToken, issueSession, newOpaqueSessionToken } from '@/server/auth/session-store';
+import {
+  bearerTokenFrom,
+  hashSessionToken,
+  isMobileClient,
+  issueSession,
+  newOpaqueSessionToken,
+} from '@/server/auth/session-store';
 import { findActiveSession, findUserById, revokeSession } from '@/server/repositories/business.repository';
 import { all } from '@/server/db/client';
 
@@ -81,5 +87,37 @@ describe('session tokens', () => {
     assert.notEqual(first.token, second.token);
     assert.notEqual(first.sessionId, second.sessionId);
     assert.ok(await findUserById(db, userId));
+  });
+});
+
+describe('mobile bearer contract', () => {
+  it('extracts the token from a well-formed bearer header', () => {
+    const token = newOpaqueSessionToken();
+    assert.equal(bearerTokenFrom(`Bearer ${token}`), token);
+  });
+
+  it('rejects missing, malformed or non-bearer headers', () => {
+    assert.equal(bearerTokenFrom(null), null);
+    assert.equal(bearerTokenFrom(''), null);
+    assert.equal(bearerTokenFrom('Basic dXNlcjpwYXNz'), null);
+    assert.equal(bearerTokenFrom('Bearer short'), null);
+    assert.equal(bearerTokenFrom('Bearer has spaces in the token value here'), null);
+  });
+
+  it('resolves a session from a bearer token and stops after revocation', async () => {
+    const { db, userId } = await createFixture();
+    const issued = await issueSession(db, { userId, activeBusinessId: null });
+    const token = bearerTokenFrom(`Bearer ${issued.token}`);
+    assert.ok(token);
+    assert.ok(await findActiveSession(db, hashSessionToken(token)));
+    await revokeSession(db, issued.sessionId);
+    assert.equal(await findActiveSession(db, hashSessionToken(token)), undefined);
+  });
+
+  it('recognises only the mobile client marker', () => {
+    assert.equal(isMobileClient('mobile'), true);
+    assert.equal(isMobileClient(' Mobile '), true);
+    assert.equal(isMobileClient('web'), false);
+    assert.equal(isMobileClient(null), false);
   });
 });

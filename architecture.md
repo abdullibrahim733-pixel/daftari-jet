@@ -1,27 +1,39 @@
 # Daftari AI — Application Architecture
 
 **Status:** Implementation guidance  
-**Product:** Voice-first, WhatsApp-native AI bookkeeper for Tanzanian small businesses  
-**Application:** Daftari Dashboard  
+**Product:** AI-first, voice-first bookkeeper for Tanzanian small businesses (WhatsApp capture deferred)  
+**Application:** Daftari Next.js backend/web app and Expo/React Native iOS/Android client  
 **Audience:** Engineering team and AI coding agents  
 **Related specification:** `PRD.md`
 
 ## 1. Architecture goals and invariants
 
-The system receives business activity through WhatsApp, preserves the original source, transcribes and interprets it, presents a proposal for human review, and writes confirmed records to a tenant-scoped ledger. The dashboard is the review/control center. WhatsApp remains the default capture channel.
+The system receives business activity through in-app voice capture (mobile and web), preserves the original source, transcribes and interprets it, presents a proposal for human review, and writes confirmed records to a tenant-scoped ledger. WhatsApp is a deferred channel: its adapter and webhook stay disabled by default until separately prioritized and security-reviewed.
+
+### Clients and sessions
+
+- The Next.js server is the single shared backend; web and Expo clients call the same authenticated `/api/v1` routes and domain services. Mobile clients never access the database.
+- Web keeps HTTP-only cookie sessions. Mobile uses the same opaque session token as a bearer token, validated server-side against the same session store (hashed at rest, expiring, revocable). Native clients send `X-Daftari-Client: mobile` to `POST /api/v1/auth/sign-in` or `/auth/register`; the response then includes `sessionToken` and `expiresAt` in the body and no cookie is set. Later requests send `Authorization: Bearer <token>`; if both a cookie and a bearer header are present, the cookie wins. `DELETE /api/v1/session` revokes the session. Tokens are kept in iOS Keychain / Android Keystore, never AsyncStorage. Token renewal is not implemented yet; the session expires after 14 days and the app must sign in again.
+- Uploads are retried safely using client-generated capture IDs. Provider choices (speech, extraction) must be explicitly configured and tested; extraction `off` produces no automatic drafts.
+- Share API schemas, types, localization, and money/date formatting between clients where practical; keep UI components separate.
 
 ### Core pipeline
 
 ```text
-WhatsApp event
-  → authenticated webhook
-  → idempotent source event + encrypted media
+In-app recording (mobile/web)
+  → authenticated capture API (idempotent by capture ID)
+  → encrypted media + source record
   → asynchronous transcription
   → structured extraction proposal
   → validation and review queue
   → authorized human decision
   → confirmed ledger + immutable audit event
   → tenant-scoped dashboard aggregates/reports
+
+Deferred channel (same pipeline from transcription onward):
+WhatsApp event
+  → authenticated webhook
+  → idempotent source event + encrypted media
 ```
 
 ### Non-negotiable invariants
@@ -420,7 +432,7 @@ If any step fails, all ledger-facing effects roll back. Rejection is also atomic
 | Extraction uncertain | “Check details” and show missing fields |
 | Temporary provider outage | Keep source, retry automatically, show delayed state |
 | Permanent failure | Show source and safe error; allow retry if safe or contact support |
-| WhatsApp disconnected | Show last successful event and reconnection steps |
+| WhatsApp disconnected (deferred channel) | Show last successful event and reconnection steps |
 | Concurrent decision | Refresh/reconcile; never silently overwrite |
 
 ## 8. Tenancy, authentication, and RBAC
@@ -477,7 +489,7 @@ This is a design baseline, not legal advice. Before launch, have local privacy/l
 
 ### Privacy by design
 
-Collect only what is needed for bookkeeping. Use phone numbers as references when possible; avoid enriching contacts from third-party sources by default. Provide clear notice about WhatsApp processing, AI providers, transcript/audio retention, and human review. Consent and lawful basis must be represented in integration state and checked before processing where required.
+Collect only what is needed for bookkeeping. Use phone numbers as references when possible; avoid enriching contacts from third-party sources by default. Provide clear notice about in-app voice processing, AI providers, transcript/audio retention, and human review (and WhatsApp processing if that channel is re-enabled). Consent and lawful basis must be represented in integration state and checked before processing where required.
 
 ## 10. Auditability and financial correctness
 
@@ -721,7 +733,7 @@ Do not treat model output tests as a substitute for financial/domain tests. Keep
 
 **Phase C — Ingestion pipeline**
 
-- Implement WhatsApp adapter and signed webhook verification.
+- Implement the in-app capture upload path first (mobile bearer-token auth, idempotent by capture ID). Implement the WhatsApp adapter and signed webhook verification only when that channel is prioritized.
 - Add source event dedupe, outbox, durable worker, private media storage, transcription and extraction adapters.
 - Add deterministic validation, retry/dead-letter paths, and operational metrics.
 

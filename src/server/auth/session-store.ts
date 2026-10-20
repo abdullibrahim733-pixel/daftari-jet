@@ -42,6 +42,24 @@ export function newOpaqueSessionToken(): string {
   return randomBytes(32).toString('base64url');
 }
 
+/** Native clients send this header on sign-in and registration to get the token in the body. */
+export const MOBILE_CLIENT_HEADER = 'x-daftari-client';
+
+export function isMobileClient(headerValue: string | null | undefined): boolean {
+  return headerValue?.trim().toLowerCase() === 'mobile';
+}
+
+/**
+ * Extracts the opaque session token from an `Authorization: Bearer` header.
+ * It is the same token the cookie carries, so validation, expiry and
+ * revocation are identical for web and native clients.
+ */
+export function bearerTokenFrom(headerValue: string | null | undefined): string | null {
+  if (!headerValue) return null;
+  const match = /^Bearer\s+([A-Za-z0-9_-]{20,200})$/.exec(headerValue.trim());
+  return match?.[1] ?? null;
+}
+
 /** Only this hash reaches the database; the raw token lives in the cookie. */
 export function hashSessionToken(token: string): string {
   return createHash('sha256').update(token).digest('hex');
