@@ -21,7 +21,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
-import DaftariLogoMark from '@/components/DaftariLogoMark';
+import SahlBrandLockup from '@/components/SahlBrandLockup';
 import { createTranslator } from '@/lib/localization';
 
 type Business = {
@@ -253,10 +253,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
         data-collapsed={collapsed ? 'true' : 'false'}
       >
         <div className="sidebar__top">
-          <Link className="brand-lockup" href="/" aria-label={t('app.name')}>
-            <DaftariLogoMark className="brand-logo-mark" />
-            <span className="brand-name">Daftari<span>AI</span></span>
-          </Link>
+          <SahlBrandLockup />
 
           <button
             className="sidebar-toggle"
@@ -282,7 +279,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
 
         <div className="workspace-label">{t('dashboard.workspace')}</div>
         <div className="workspace-switcher">
-          <span className="workspace-avatar" aria-hidden="true">{initials(activeBusiness?.name ?? 'D')}</span>
+          <span className="workspace-avatar" aria-hidden="true">{initials(activeBusiness?.name ?? 'S')}</span>
           <label className="workspace-select-wrap">
             <span className="sr-only">{t('nav.switchBusiness')}</span>
             {session?.businesses.length ? (
@@ -343,7 +340,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
             <Link href="/settings" aria-label={t('app.help')}>↗</Link>
           </div>
           <div className="profile-row">
-            <span className="profile-avatar" aria-hidden="true">{initials(session?.user.displayName ?? 'D')}</span>
+            <span className="profile-avatar" aria-hidden="true">{initials(session?.user.displayName ?? 'S')}</span>
             <span className="profile-info">
               <strong>{session?.user.displayName ?? t('dashboard.account')}</strong>
               <small>{activeBusiness?.role ?? t('dashboard.workspace')}</small>
@@ -356,10 +353,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
       <div className="dashboard-main">
         <header className="topbar">
           <div className="topbar-mobile-brand">
-            <Link className="brand-lockup" href="/" aria-label={t('app.name')}>
-              <DaftariLogoMark className="brand-logo-mark" />
-              <span className="brand-name">Daftari<span>AI</span></span>
-            </Link>
+            <SahlBrandLockup />
           </div>
           <div className="topbar-context">
             <span className="context-dot" aria-hidden="true" />
@@ -381,7 +375,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
               aria-haspopup="true"
               onClick={() => { setMenuOpen((open) => !open); setMoreOpen(false); }}
             >
-              <span aria-hidden="true">{initials(session?.user.displayName ?? 'D')}</span>
+              <span aria-hidden="true">{initials(session?.user.displayName ?? 'S')}</span>
               <span aria-hidden="true">⌄</span>
             </button>
             {menuOpen && (

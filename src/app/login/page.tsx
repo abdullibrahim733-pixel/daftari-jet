@@ -2,7 +2,7 @@
  * Sign-in.
  *
  * The first screen a merchant sees, so it has to do three things at once: say
- * what Daftari is in one line, get out of the way, and never look like a
+ * what SAHL is in one line, get out of the way, and never look like a
  * generic SaaS login form. The layout is a two-panel split on desktop — the
  * story on the left in Deep Navy, the form on the right in Warm Ivory — and
  * collapses to a single column on a phone, where only the form survives.
@@ -16,11 +16,13 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { optionalSession, devLoginEnabled } from '@/server/auth/session';
 import { createTranslator } from '@/lib/localization';
+import { BRAND } from '@/lib/brand';
+import SahlBrandLockup from '@/components/SahlBrandLockup';
 import LoginForm from './LoginForm';
 
 export const metadata: Metadata = {
   title: 'Sign in',
-  description: 'Sign in to the Daftari dashboard to review your business records.',
+  description: `Sign in to ${BRAND.name} to review your business records.`,
 };
 
 const t = createTranslator('en');
@@ -36,10 +38,7 @@ export default async function LoginPage() {
     <div className="auth-layout">
       {/* Story panel. Decorative on a phone: the benefits move under the form. */}
       <section className="auth-story" aria-hidden="false">
-        <Link className="auth-brand" href="/login">
-          <span className="brand-mark" aria-hidden="true">d</span>
-          <span className="brand-name">daftari<span>.</span></span>
-        </Link>
+        <SahlBrandLockup className="auth-brand" href="/login" />
 
         <div className="auth-story__body">
           <h1 className="auth-headline">{t('signin.title')}</h1>
@@ -60,10 +59,7 @@ export default async function LoginPage() {
 
       <section className="auth-panel">
         <div className="auth-panel__inner">
-          <div className="auth-panel__mobile-brand">
-            <span className="brand-mark" aria-hidden="true">d</span>
-            <span className="brand-name">daftari<span>.</span></span>
-          </div>
+          <SahlBrandLockup className="auth-panel__mobile-brand" href="/login" />
 
           <LoginForm devLoginAvailable={devLoginEnabled()} />
 

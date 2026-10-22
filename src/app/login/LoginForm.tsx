@@ -154,7 +154,7 @@ export default function LoginForm({ devLoginAvailable }: { devLoginAvailable: bo
       const response = await fetch('/api/v1/dev/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subject: 'dev-owner', businessName: 'Daftari Demo Shop' }),
+        body: JSON.stringify({ subject: 'dev-owner', businessName: 'SAHL Demo Shop' }),
       });
       if (response.ok) {
         window.location.assign('/');

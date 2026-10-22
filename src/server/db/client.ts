@@ -285,12 +285,28 @@ export async function exec(db: Db, sql: string): Promise<void> {
   for (const statement of splitSqlStatements(sql)) await run(db, statement);
 }
 
+let sqliteSavepointCounter = 0;
+
 /** Async transaction wrapper. AsyncLocalStorage routes nested repository calls
  * through the same PostgreSQL client, preserving atomic ledger confirmation.
  */
 export async function withTransaction<T>(fn: () => Promise<T>, db: Db = getDatabase()): Promise<T> {
   if (db.backend.kind === 'sqlite') {
     const connection = db.backend.connection;
+    if (connection.isTransaction) {
+      sqliteSavepointCounter += 1;
+      const savepoint = `daftari_sp_${sqliteSavepointCounter}`;
+      connection.exec(`SAVEPOINT ${savepoint}`);
+      try {
+        const value = await fn();
+        connection.exec(`RELEASE SAVEPOINT ${savepoint}`);
+        return value;
+      } catch (error) {
+        connection.exec(`ROLLBACK TO SAVEPOINT ${savepoint}`);
+        connection.exec(`RELEASE SAVEPOINT ${savepoint}`);
+        throw error;
+      }
+    }
     connection.exec('BEGIN IMMEDIATE');
     try {
       const value = await fn();

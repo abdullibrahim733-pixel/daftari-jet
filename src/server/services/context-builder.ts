@@ -15,7 +15,7 @@ import { DEFAULT_LOCALE, isLocale } from '@/lib/localization/locales';
 import { assertValidTimeZone } from '@/lib/formatting/datetime';
 
 const SYSTEM_USER_ID = 'system';
-const SYSTEM_USER_NAME = 'Daftari automation';
+const SYSTEM_USER_NAME = 'SAHL automation';
 
 export async function businessContextForJob(db: Db, businessId: string | null): Promise<BusinessContext> {
   if (!businessId) {

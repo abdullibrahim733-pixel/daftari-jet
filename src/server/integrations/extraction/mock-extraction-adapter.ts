@@ -395,7 +395,7 @@ export const mockExtractionAdapter: ExtractionAdapter = {
           {
             field: 'clarification',
             question:
-              'This message seems to describe more than one record. Which one should Daftari prepare?',
+              'This message seems to describe more than one record. Which one should SAHL prepare?',
           },
         ],
         clarificationRequired: true,
@@ -500,7 +500,7 @@ export const mockExtractionAdapter: ExtractionAdapter = {
     if (intent === 'note' && !noteHit) {
       ambiguities.push({
         field: 'recordType',
-        question: 'Daftari could not tell whether this is a sale, an expense or a note.',
+        question: 'SAHL could not tell whether this is a sale, an expense or a note.',
       });
     }
 

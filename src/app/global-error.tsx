@@ -24,14 +24,14 @@ export default function GlobalError({
           minHeight: '100vh',
           display: 'grid',
           placeItems: 'center',
-          background: '#0B0B0F',
-          color: '#FFFFFF',
+          background: '#F5F5EC',
+          color: '#1A1A1A',
           fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, -apple-system, sans-serif',
         }}
       >
         <main style={{ maxWidth: 460, padding: 32, textAlign: 'center' }}>
           <h1 style={{ fontSize: 28, letterSpacing: '-0.02em', margin: '0 0 12px' }}>
-            Daftari could not start
+            SAHL could not start
           </h1>
           <p style={{ fontSize: 15, lineHeight: 1.55, opacity: 0.72, margin: '0 0 24px' }}>
             Refresh the page to try again. If it keeps happening, contact support and quote the reference below.
@@ -48,15 +48,15 @@ export default function GlobalError({
               appearance: 'none',
               border: 0,
               cursor: 'pointer',
-              background: '#FF1133',
-              color: '#FFFFFF',
+              background: '#D4A23C',
+              color: '#1A1A1A',
               fontSize: 15,
               fontWeight: 600,
               padding: '12px 24px',
               borderRadius: 999,
             }}
           >
-            Reload Daftari
+            Reload SAHL
           </button>
         </main>
       </body>

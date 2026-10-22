@@ -15,6 +15,7 @@
  */
 
 import { createTranslator } from '@/lib/localization';
+import SahlBrandMark from './SahlBrandMark';
 
 const t = createTranslator('en');
 
@@ -29,7 +30,7 @@ export default function BootScreen({
     <div className="boot" role="status" aria-live="polite">
       <div className="boot__inner">
         <div className="boot__mark" aria-hidden="true">
-          <span className="brand-mark">d</span>
+          <SahlBrandMark className="brand-logo-mark" />
         </div>
 
         <p className="boot__title">{title ?? t('app.bootTitle')}</p>

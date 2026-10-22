@@ -26,7 +26,7 @@ export default function SettingsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [devSubject, setDevSubject] = useState('dev-owner');
-  const [devName, setDevName] = useState('Daftari Owner');
+  const [devName, setDevName] = useState('SAHL Owner');
   const [devBiz, setDevBiz] = useState('Demo Shop');
 
   async function readSession(): Promise<{ session: Session | null; devLoginAvailable: boolean }> {

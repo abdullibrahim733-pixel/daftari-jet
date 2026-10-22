@@ -44,7 +44,7 @@ export const POST = route(async (request) => {
     await findUserByProviderSubject(db, subject) ??
     await createUser(db, {
       providerSubject: subject,
-      displayName: body.displayName ?? 'Daftari Owner',
+      displayName: body.displayName ?? 'SAHL Owner',
     });
 
   let businessId = (await listBusinessesForUser(db, user.id))[0]?.id ?? null;

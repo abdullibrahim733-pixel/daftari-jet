@@ -37,7 +37,7 @@ export const GET = route(async (request) => {
       'content-type': CONTENT_TYPES[job.format] ?? 'application/octet-stream',
       'content-length': String(bytes.byteLength),
       'cache-control': 'no-store',
-      'content-disposition': `attachment; filename="daftari-${job.from_date}-to-${job.to_date}.${job.format}"`,
+      'content-disposition': `attachment; filename="sahl-${job.from_date}-to-${job.to_date}.${job.format}"`,
     },
   });
 });

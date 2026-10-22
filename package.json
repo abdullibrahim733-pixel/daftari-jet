@@ -2,7 +2,7 @@
   "name": "daftari-dashboard",
   "version": "0.1.0",
   "private": true,
-  "description": "Daftari AI Dashboard - voice-first, WhatsApp-native AI bookkeeper for Tanzanian small businesses",
+  "description": "SAHL - Swahili-first AI bookkeeping assistant for Tanzanian small businesses",
   "engines": {
     "node": ">=24.0.0"
   },

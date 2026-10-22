@@ -24,8 +24,8 @@ import {
 
 const PROVIDER = 'whatsapp';
 const DEFAULT_SUBJECT = 'dev-owner';
-const DEFAULT_DISPLAY_NAME = 'Daftari Owner';
-const DEFAULT_BUSINESS_NAME = 'Daftari Demo Shop';
+const DEFAULT_DISPLAY_NAME = 'SAHL Owner';
+const DEFAULT_BUSINESS_NAME = 'SAHL Demo Shop';
 const DEFAULT_ACCOUNT_REF = '+255700000001';
 
 async function seed(db: Db, env: NodeJS.ProcessEnv): Promise<void> {

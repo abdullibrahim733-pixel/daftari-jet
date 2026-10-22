@@ -1,8 +1,8 @@
-# Daftari AI — Application Architecture
+# SAHL — Application Architecture
 
 **Status:** Implementation guidance  
 **Product:** AI-first, voice-first bookkeeper for Tanzanian small businesses (WhatsApp capture deferred)  
-**Application:** Daftari Next.js backend/web app and Expo/React Native iOS/Android client  
+**Application:** SAHL Next.js backend/web app and Expo/React Native iOS/Android client
 **Audience:** Engineering team and AI coding agents  
 **Related specification:** `PRD.md`
 
@@ -792,4 +792,3 @@ Do not treat model output tests as a substitute for financial/domain tests. Keep
 - [ ] Alerts, queue replay, incident response, and support ownership are documented.
 - [ ] Dashboard calculations validated for TZS, timezone, refunds, debt, partial payments, and reversals.
 - [ ] Pilot acceptance criteria and correction-rate review are agreed before launch expansion.
-

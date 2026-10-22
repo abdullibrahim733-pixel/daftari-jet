@@ -314,7 +314,10 @@ export async function customerBalances(db: Db, scope: TenantScope, todayDate: st
      JOIN ledger_records r ON r.id = o.ledger_record_id
      WHERE o.business_id = ? AND o.state != 'voided' AND r.status = 'posted'
      GROUP BY o.customer_id, c.display_name
-     HAVING balance_minor > 0
+     HAVING SUM(o.original_amount_minor
+                - COALESCE((SELECT SUM(p.amount_minor) FROM debt_payments p
+                            WHERE p.obligation_id = o.id
+                              AND p.ledger_record_id IN (SELECT id FROM ledger_records WHERE status = 'posted')), 0)) > 0
      ORDER BY balance_minor DESC`,
     [scope.businessId],
   );

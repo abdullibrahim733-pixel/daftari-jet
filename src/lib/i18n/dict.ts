@@ -1,6 +1,6 @@
 export const dict = {
   en: {
-    app: 'Daftari',
+    app: 'SAHL',
     nav: {
       review: 'Review',
       records: 'Records',
@@ -20,7 +20,7 @@ export const dict = {
     },
   },
   sw: {
-    app: 'Daftari',
+    app: 'SAHL',
     nav: {
       review: 'Kagua',
       records: 'Rekodi',

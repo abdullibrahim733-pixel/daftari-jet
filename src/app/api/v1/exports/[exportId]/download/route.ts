@@ -41,7 +41,7 @@ export const GET = route<{ exportId: string }>(async (_request, { params }) => {
     exportId: job.id,
     url: `/api/v1/media/download?token=${encodeURIComponent(link.token)}`,
     expiresAt: link.expiresAt,
-    fileName: `daftari-${job.from_date}-to-${job.to_date}.${job.format}`,
+    fileName: `sahl-${job.from_date}-to-${job.to_date}.${job.format}`,
     rowCount: job.row_count,
     byteSize: job.byte_size,
   });

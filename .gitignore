@@ -19,3 +19,4 @@ test-output.log
 .playwright/
 .vercel
 .env*
+.daftari-e2e/

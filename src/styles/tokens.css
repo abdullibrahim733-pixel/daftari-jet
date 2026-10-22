@@ -1,64 +1,57 @@
-/*
- * Single token source for the Daftari Dashboard.
- *
- * Core principles: clarity, calm, and practical depth.
- *   - Deep Navy #0D1B2A anchors the interface.
- *   - Saffron Orange #FF8A00 is reserved for primary actions and active states.
- *   - Warm Ivory #FFF7E6 and blue-grey provide readable contrast.
- */
+/* SAHL identity tokens: forest green, warm gold, ivory and charcoal. */
 
 @theme {
-  /* Daftari brand */
-  --color-black-matte: #0d1b2a;
-  --color-white: #fff7e6;
-  --color-crimson: #ff8a00;
-  --color-crimson-hover: #e67c00;
+  --color-brand-forest: #0f2d24;
+  --color-brand-gold: #d4a23c;
+  --color-brand-ivory: #f5f5ec;
+  --color-brand-charcoal: #1a1a1a;
+  --color-brand-muted: #5f6b66;
 
-  /* Layered navy surfaces */
-  --color-surface: #0d1b2a;
-  --color-surface-raised: #10263a;
-  --color-surface-subtle: #122b41;
-  --color-surface-sunken: #0a1724;
-  --color-surface-disabled: #18334a;
-  --color-surface-inverse: #fff7e6;
-  --color-surface-inverse-soft: #f2eadb;
+  /* Legacy foreground aliases are retained for existing component styles. */
+  --color-black-matte: var(--color-brand-ivory);
+  --color-white: var(--color-brand-charcoal);
+  --color-crimson: var(--color-brand-forest);
+  --color-crimson-hover: #194336;
 
-  /* Borders */
-  --color-border-subtle: #263b4d;
-  --color-border-strong: #52697d;
-  --color-border-inverse: #0d1b2a;
-  --color-border-crimson: #ff8a00;
+  --color-surface: var(--color-brand-ivory);
+  --color-surface-raised: #fffefa;
+  --color-surface-subtle: #eceee6;
+  --color-surface-sunken: #e5e8df;
+  --color-surface-disabled: #e5e8df;
+  --color-surface-inverse: var(--color-brand-forest);
+  --color-surface-inverse-soft: #194336;
 
-  /* Text */
-  --color-text: #fff7e6;
-  --color-text-muted: #9eb3c8;
-  --color-text-subtle: #7f97ad;
-  --color-text-inverse: #0d1b2a;
-  --color-text-inverse-muted: #52697d;
-  --color-text-link: #fff7e6;
+  --color-border-subtle: #d8ddd5;
+  --color-border-strong: #87948c;
+  --color-border-inverse: var(--color-brand-ivory);
+  --color-border-crimson: var(--color-brand-forest);
 
-  /* Semantic states */
-  --color-state-success: #74c69d;
-  --color-state-success-surface: #173b34;
-  --color-state-warning: #ffbd70;
-  --color-state-warning-surface: #3a2b19;
-  --color-state-danger: #ef766d;
-  --color-state-danger-surface: #3b2328;
-  --color-state-info: #8eb8d6;
-  --color-state-info-surface: #18334a;
-  --color-state-neutral-surface: #18334a;
+  --color-text: var(--color-brand-charcoal);
+  --color-text-muted: var(--color-brand-muted);
+  --color-text-subtle: #6b7771;
+  --color-text-inverse: var(--color-brand-ivory);
+  --color-text-inverse-muted: #d1d8d3;
+  --color-text-link: var(--color-brand-forest);
 
-  /* Accents */
-  --color-action-primary: #ff8a00;
-  --color-action-primary-hover: #e67c00;
-  --color-action-primary-text: #0d1b2a;
-  --color-focus-ring: #ff8a00;
+  --color-state-success: #246b4b;
+  --color-state-success-surface: #e1eee5;
+  --color-state-warning: #805400;
+  --color-state-warning-surface: #f5ead1;
+  --color-state-danger: #a7332f;
+  --color-state-danger-surface: #f5e3e1;
+  --color-state-info: #245a78;
+  --color-state-info-surface: #e5eef3;
+  --color-state-neutral-surface: #eceee6;
 
-  /* Charts */
-  --color-chart-sales: #74c69d;
-  --color-chart-expenses: #ff8a00;
-  --color-chart-grid: #263b4d;
-  --color-chart-axis: #7f97ad;
+  --color-action-primary: var(--color-brand-gold);
+  --color-action-primary-hover: #c08b25;
+  --color-action-primary-text: var(--color-brand-charcoal);
+  --color-focus-ring: var(--color-brand-forest);
+
+  --color-chart-sales: #246b4b;
+  --color-chart-expenses: #b98525;
+  --color-chart-grid: #d8ddd5;
+  --color-chart-axis: #6b7771;
 
   /* Radii — Apple-style rounded rectangles */
   --radius-xs: 6px;
@@ -67,18 +60,17 @@
   --radius-lg: 22px;
   --radius-pill: 999px;
 
-  /* Shadows — depth through blur and subtle elevation */
-  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.4), 0 1px 2px rgb(0 0 0 / 0.2);
-  --shadow-raised: 0 10px 30px rgb(0 0 0 / 0.4);
-  --shadow-overlay: 0 20px 60px rgb(0 0 0 / 0.6);
+  --shadow-card: 0 1px 3px rgb(15 45 36 / 0.08), 0 1px 2px rgb(15 45 36 / 0.05);
+  --shadow-raised: 0 10px 30px rgb(15 45 36 / 0.12);
+  --shadow-overlay: 0 20px 60px rgb(26 26 26 / 0.2);
 
-  /* Typography — San Francisco / SF Pro */
+  /* Typography — readable system sans with Arabic-capable fallbacks. */
   --font-sans:
     -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+    'Helvetica Neue', Arial, 'Noto Sans', 'Noto Sans Arabic', sans-serif;
   --font-display:
     -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+    'Helvetica Neue', Arial, 'Noto Sans', 'Noto Sans Arabic', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 
   /* Z-index scale */

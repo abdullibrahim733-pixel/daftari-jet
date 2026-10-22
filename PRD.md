@@ -1,15 +1,15 @@
-# Daftari Dashboard — Product Requirements Document
+# SAHL — Product Requirements Document
 
 **Status:** Implementation specification  
-**Product:** Daftari AI  
-**Surface:** Daftari merchant apps — Expo/React Native (iOS, Android) and the Next.js web app, sharing one backend  
+**Product:** SAHL
+**Surface:** SAHL merchant apps — Expo/React Native (iOS, Android) and the Next.js web app, sharing one backend
 **Audience:** Product, design, engineering, QA, and AI coding agents  
 **Initial market:** Small businesses in Tanzania  
 **Document rule:** This document defines the user-visible product. `architecture.md` defines the implementation shape.
 
 ## 1. Product summary
 
-Daftari is an AI-first, voice-first bookkeeper for Tanzanian small businesses. A merchant records a voice note inside Daftari on iOS, Android, or the web. Daftari transcribes it, interprets likely business events, and creates proposed records. The merchant reviews, corrects, and confirms them, and confirmed records become a useful view of sales, expenses, cash flow, inventory, and customer debts (deni).
+SAHL is a Swahili-first AI business assistant for Tanzanian small businesses. A merchant records a voice note in SAHL on the web or a supported mobile client. SAHL transcribes it, interprets likely business events, and creates proposed records. The merchant reviews, corrects, and confirms them, and confirmed records become a useful view of sales, expenses, cash flow, inventory, and customer debts (deni).
 
 **Direction update:** In-app AI capture is the primary recording channel. WhatsApp capture is **deferred**: it is off by default, not part of the first release, and must be separately prioritized and security-reviewed before re-enabling. Existing WhatsApp requirements elsewhere in this document describe the deferred channel and do not gate the first release.
 
@@ -19,9 +19,9 @@ Native mobile clients use the same authenticated HTTP APIs as the web app and ne
 
 ### Product promise
 
-**You speak. Daftari remembers. You stay in control.**
+**Business made simple. Sema kilichotokea. Fahamu biashara yako.**
 
-Daftari reduces the bookkeeping work between serving customers and understanding how the business is doing. It should feel clear and approachable to a merchant who does not use accounting software today.
+SAHL reduces the bookkeeping work between serving customers and understanding how the business is doing. It should feel clear and approachable to a merchant who does not use accounting software today.
 
 ## 2. Problem and product principles
 
@@ -31,7 +31,7 @@ Many small merchants keep business knowledge across memory, paper notebooks, mes
 
 ### Product principles
 
-1. **Voice-first, capture-first.** Recording in the Daftari app (mobile or web) is the default; WhatsApp is deferred. The app also provides review, correction, reporting, and administration.
+1. **Voice-first, capture-first.** Recording in the SAHL app (mobile or web) is the default; WhatsApp is deferred. The app also provides review, correction, reporting, and administration.
 2. **Human confirmation for money records.** AI extraction creates a proposal. It never silently posts or alters a sale, expense, payment, debt, or stock movement.
 3. **Show the source.** Every proposal and confirmed record links back to its source message, transcript, import, or manual entry.
 4. **Plain language.** Prefer merchant language (“Sales”, “Money in”, “People who owe you”) over accounting jargon. Provide English and Swahili-ready copy; do not machine-translate financial meaning without review.
@@ -132,7 +132,7 @@ record → upload (retryable by capture ID) → processing (transcribe, extract)
 
 **Purpose:** Establish a secure account, business workspace, owner, preferred language, timezone, and currency, then take the owner straight to Record.
 
-**Screen components:** Daftari mark, concise benefit statement, phone/email authentication UI based on the chosen identity provider, privacy link, language control, progress indicator, and help link.
+**Screen components:** SAHL / سهل brand lockup, concise benefit statement, phone/email authentication UI based on the chosen identity provider, privacy link, language control, progress indicator, and help link.
 
 **Onboarding steps:**
 
@@ -255,7 +255,7 @@ Privacy controls make available product-defined retention options, export reques
 ### Voice note to confirmed record
 
 1. Merchant opens Record in the mobile or web app and records a voice note.
-2. The app uploads it to the authenticated capture API with a client-generated capture ID; retries are idempotent. Daftari stores the source and an encrypted audio object according to retention policy.
+2. The app uploads it to the authenticated capture API with a client-generated capture ID; retries are idempotent. SAHL stores the source and an encrypted audio object according to retention policy.
 3. The system acknowledges receipt promptly and queues processing.
 4. Speech-to-text creates a transcript with language and quality metadata.
 5. Extraction returns zero or more typed proposals with field provenance, confidence/uncertainty, and missing fields.
@@ -398,4 +398,3 @@ Access to audio/transcripts is sensitive and should be separately logged. Analyt
 - Tax/accounting semantics and whether any export may be described as tax-ready.
 - Payment verification source, if added; a voice statement alone is not settlement proof.
 - Launch feature scope for inventory, manual entries, and multiple currencies.
-

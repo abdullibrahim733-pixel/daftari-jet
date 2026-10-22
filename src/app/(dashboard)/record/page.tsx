@@ -237,6 +237,18 @@ export default function RecordPage() {
     if (audioUrl) URL.revokeObjectURL(audioUrl);
   }, [audioUrl, clearTimer]);
 
+  useEffect(() => {
+    // The browser keeps the recording blob only in memory until the upload is
+    // accepted. Warn before a refresh or tab close can silently discard it.
+    if (!['recording', 'ready', 'uploading'].includes(phase)) return;
+    const warnBeforeLeaving = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = t('record.leaveWarning');
+    };
+    window.addEventListener('beforeunload', warnBeforeLeaving);
+    return () => window.removeEventListener('beforeunload', warnBeforeLeaving);
+  }, [phase]);
+
   const start = useCallback(async () => {
     if (!recordingSupported()) {
       setError(t('record.unsupported'));
@@ -429,7 +441,7 @@ export default function RecordPage() {
     <div className="voice-recording">
       <section className="voice-recording__content" aria-labelledby="record-screen-title">
         <div className="voice-recording__intro">
-          <p className="voice-recording__eyebrow">Sema, Daftari inaandika.</p>
+          <p className="voice-recording__eyebrow">Sema, SAHL inaandika.</p>
           <h1 id="record-screen-title">{t('record.title')}</h1>
           <p>{t('record.subtitle')}</p>
         </div>
